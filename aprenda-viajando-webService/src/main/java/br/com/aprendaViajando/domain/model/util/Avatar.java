@@ -27,10 +27,6 @@ public class Avatar extends AbstractPersistable<Long> {
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
 	
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinColumn(name = "avatar_ponto_turistico_id")
-	private PontoTuristico avatarPontoTuristico;
-	
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "ponto_turistico_id")
 	private PontoTuristico pontoTuristico;
@@ -70,14 +66,6 @@ public class Avatar extends AbstractPersistable<Long> {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
-	}
-
-	public PontoTuristico getAvatarPontoTuristico() {
-		return avatarPontoTuristico;
-	}
-
-	public void setAvatarPontoTuristico(PontoTuristico avatarPontoTuristico) {
-		this.avatarPontoTuristico = avatarPontoTuristico;
 	}
 
 	public PontoTuristico getPontoTuristico() {
