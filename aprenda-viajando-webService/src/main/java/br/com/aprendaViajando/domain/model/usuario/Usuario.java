@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -40,7 +39,7 @@ public class Usuario extends AbstractPersistable<Long> {
 	
 	@NotBlank
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinColumn(name = "usuario_id")
+	@JoinColumn(name = "avatar_id")
 	private Avatar avatar;
 	
 	@NotBlank

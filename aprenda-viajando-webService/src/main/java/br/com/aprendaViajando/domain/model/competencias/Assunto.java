@@ -16,7 +16,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 public class Assunto extends AbstractPersistable<Long> {
 
 	@NotBlank
-	@Column(nullable = false, length = 20) 
+	@Column(nullable = false, unique = true, length = 20) 
 	@Size(max = 20)
 	private String nome;
 	
