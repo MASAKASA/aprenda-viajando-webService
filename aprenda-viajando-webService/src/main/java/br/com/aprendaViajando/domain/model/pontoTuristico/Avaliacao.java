@@ -1,22 +1,29 @@
 package br.com.aprendaViajando.domain.model.pontoTuristico;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+import br.com.aprendaViajando.domain.model.usuario.Usuario;
+
 @Entity
 @Table(name = "avaliacoes")
 public class Avaliacao extends AbstractPersistable<Long> {
 
-	@Column(name="total_avaliacoes") 
+	@Column(name="total_das_avaliacoes") 
 	@Size(min = 0)
-	private Integer totalAvaliacoes;
+	private Integer totalDasAvaliacoes;
 	
-	@Column(name="total_avaliadores") 
+	@Column(name="total_dos_avaliadores") 
 	@Size(min = 0)
-	private Integer totalAvaliadores;
+	private Integer totalDosAvaliadores;
 	
 	@Column(name="media_avaliacao") 
 	@Size(min = 0)
@@ -26,30 +33,39 @@ public class Avaliacao extends AbstractPersistable<Long> {
 	@Size(min = 0)
 	private Integer avaliacaoAtual;
 	
+	@Column(name="avaliacao_usuario") 
+	@Size(min = 0)
+	private Integer avaliacaoUsuario;
+	
 	@NotBlank
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "ponto_turistico_id")
 	private PontoTuristico pontoTuristico;
+	
+	@NotBlank
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinColumn(name = "usuario_id")
+	private Usuario usuario;
 
 	@Override
 	protected void setId(Long id) {
 		super.setId(id);
 	}
 
-	public Integer getTotalAvaliacoes() {
-		return totalAvaliacoes;
+	public Integer getTotalDasAvaliacoes() {
+		return totalDasAvaliacoes;
 	}
 
-	public void setTotalAvaliacoes(Integer totalAvaliacoes) {
-		this.totalAvaliacoes = totalAvaliacoes;
+	public void setTotalDasAvaliacoes(Integer totalDasAvaliacoes) {
+		this.totalDasAvaliacoes = totalDasAvaliacoes;
 	}
 
-	public Integer getTotalAvaliadores() {
-		return totalAvaliadores;
+	public Integer getTotalDosAvaliadores() {
+		return totalDosAvaliadores;
 	}
 
-	public void setTotalAvaliadores(Integer totalAvaliadores) {
-		this.totalAvaliadores = totalAvaliadores;
+	public void setTotalDosAvaliadores(Integer totalDosAvaliadores) {
+		this.totalDosAvaliadores = totalDosAvaliadores;
 	}
 
 	public Integer getMediaAvaliacao() {
@@ -68,11 +84,27 @@ public class Avaliacao extends AbstractPersistable<Long> {
 		this.avaliacaoAtual = avaliacaoAtual;
 	}
 
+	public Integer getAvaliacaoUsuario() {
+		return avaliacaoUsuario;
+	}
+
+	public void setAvaliacaoUsuario(Integer avaliacaoUsuario) {
+		this.avaliacaoUsuario = avaliacaoUsuario;
+	}
+
 	public PontoTuristico getPontoTuristico() {
 		return pontoTuristico;
 	}
 
 	public void setPontoTuristico(PontoTuristico pontoTuristico) {
 		this.pontoTuristico = pontoTuristico;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 }

@@ -14,16 +14,6 @@ import br.com.aprendaViajando.domain.model.competencias.Competencia;
  *
  */
 public interface AssuntoRepository extends JpaRepository<Assunto, Long>{
-
-	/**
-	 * Buscar por Assuntos para paginação conforme os dados no Page e ordena pelo
-	 * nome da competencia
-	 *  
-	 * @param Pageable pageable com as quantidades de linhas e a posição para pesquisa no banco de dados
-	 *  
-	 * @return Page com os Assuntos encontrados ou vazio se nenhum resultado for encontrado
-	 */
-	Page<Assunto> findAllByOrderByCompetenciaNomeAsc(Pageable pageable);
 	
 	/**
 	 * Buscar por Assuntos para paginação conforme os dados no Page e o campo competencia_id e ordena pelo
@@ -35,7 +25,7 @@ public interface AssuntoRepository extends JpaRepository<Assunto, Long>{
 	 *  
 	 * @return Page com os Assuntos encontrados ou vazio se nenhum resultado for encontrado
 	 */
-	Page<Assunto> findByCompetenciaOrderByCompetenciaNomeAsc(Competencia competencia, Pageable pageable);
+	Page<Assunto> findByCompetenciaIdOrderByCompetenciaNomeAsc(Competencia competencia, Pageable pageable);
 	
 	/**
 	 * Buscar Assunto conforme o parametro coincida com permalink o campo permalink
