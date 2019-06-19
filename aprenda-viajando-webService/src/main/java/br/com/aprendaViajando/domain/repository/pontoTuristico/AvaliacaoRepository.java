@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import br.com.aprendaViajando.domain.model.pontoTuristico.Avaliacao;
 import br.com.aprendaViajando.domain.model.pontoTuristico.PontoTuristico;
 
-public interface AvaliacaoRetositoy extends JpaRepository<Avaliacao, Long>{
+public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Long>{
 
 	/**
 	 * Buscar por Avaliacões para paginação conforme os dados no Page e ordena pelo nome do ponto

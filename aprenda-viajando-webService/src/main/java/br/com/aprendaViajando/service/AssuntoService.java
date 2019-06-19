@@ -33,8 +33,7 @@ public class AssuntoService {
 	
 	@Transactional(readOnly = false)
 	public void saveOrUpdate(Assunto assunto) {
-		
-		String permalink = ReplaceString.formatarPermalink(assunto.getNome());
+		assunto.setPermalink(ReplaceString.formatarPermalink(assunto.getNome()));
 		
 		if (assunto.getId() != null) {
 			Optional<Assunto> optional = repository.findById(assunto.getId());
@@ -48,7 +47,6 @@ public class AssuntoService {
 			
 			repository.save(aPersistente);
 		} else {
-			assunto.setPermalink(permalink);
 			repository.save(assunto);
 		}
 	}
@@ -56,7 +54,6 @@ public class AssuntoService {
 	@Transactional(readOnly = false)
 	public
 	 void delete(Long id) {
-		
 		Optional<Assunto> optional = repository.findById(id);
 		
 		Assunto aPersistente = optional.get();
@@ -65,34 +62,28 @@ public class AssuntoService {
 	}
 	
 	public Assunto findById(Long id) {
-		
 		Optional<Assunto> optional = repository.findById(id);
 		
 		return optional.get();
 	}
 	
 	public Assunto findByPermalink(String permalink) {
-		
 		return repository.findByPermalink(permalink);
 	}
 	
 	public List<Assunto> findAll() {
-		
 		return repository.findAll(Sort.by("nome"));
 	}
 	
 	public List<Assunto> findByNome(String nome) {
-		
 		return repository.findByNomeContainingOrderByNomeAsc(nome);
 	}
 	
 	public List<Assunto> findByCompetencia(Competencia competencia) {
-		
 		return repository.findByCompetenciaIdContainingOrderByNomeAsc(competencia);
 	}
 	
 	public Page<Assunto> findByPagination(int page, int size) {
-
 		Pageable pageable = PageRequest.of(page, size);
 		
 		return repository.findAll(pageable);

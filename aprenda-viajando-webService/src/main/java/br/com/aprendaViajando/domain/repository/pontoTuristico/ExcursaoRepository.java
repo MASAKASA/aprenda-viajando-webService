@@ -1,6 +1,6 @@
 package br.com.aprendaViajando.domain.repository.pontoTuristico;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -64,7 +64,7 @@ public interface ExcursaoRepository extends JpaRepository<Excursao, Long>{
 	 * 		for encontrado
 	 */
 	List<Excursao> findByDataExcursaoBetweenOrderByDataExcursaoAsc(
-			LocalDate dataInicial, LocalDate dataFinal);
+			LocalDateTime dataInicial, LocalDateTime dataFinal);
 	
 	/**
 	 * Busca por excursões entre as data infornadas no campo dataExcusao
@@ -78,7 +78,7 @@ public interface ExcursaoRepository extends JpaRepository<Excursao, Long>{
 	 * 		for encontrado
 	 */
 	List<Excursao> findByDataExcursaoBetweenOrderByDataExcursaoDesc(
-			LocalDate dataInicial, LocalDate dataFinal);
+			LocalDateTime dataInicial, LocalDateTime dataFinal);
 	
 	/**
 	 * Busca por excursões entre as data infornadas no campo dataExcusao
@@ -94,7 +94,7 @@ public interface ExcursaoRepository extends JpaRepository<Excursao, Long>{
 	 * 		for encontrado
 	 */
 	List<Excursao> findByStatusExcursaoAndDataExcursaoBetweenOrderByDataExcursaoAsc(
-			StatusExcursao statusExcursao, LocalDate dataInicial, LocalDate dataFinal);
+			StatusExcursao statusExcursao, LocalDateTime dataInicial, LocalDateTime dataFinal);
 	
 	/**
 	 * Busca por excursões entre as data infornadas no campo dataExcusao
@@ -110,5 +110,5 @@ public interface ExcursaoRepository extends JpaRepository<Excursao, Long>{
 	 * 		for encontrado
 	 */
 	List<Excursao> findByStatusExcursaoAndDataExcursaoBetweenOrderByDataExcursaoDesc(
-			StatusExcursao statusExcursao, LocalDate dataInicial, LocalDate dataFinal);
+			StatusExcursao statusExcursao, LocalDateTime dataInicial, LocalDateTime dataFinal);
 }

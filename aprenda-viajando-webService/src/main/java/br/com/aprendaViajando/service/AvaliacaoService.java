@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.aprendaViajando.domain.model.pontoTuristico.Avaliacao;
 import br.com.aprendaViajando.domain.model.pontoTuristico.PontoTuristico;
-import br.com.aprendaViajando.domain.repository.pontoTuristico.AvaliacaoRetositoy;
+import br.com.aprendaViajando.domain.repository.pontoTuristico.AvaliacaoRepository;
 import br.com.aprendaViajando.util.MediaAvaliacao;
 
 /**
@@ -29,16 +29,15 @@ import br.com.aprendaViajando.util.MediaAvaliacao;
 public class AvaliacaoService {
 
 	@Autowired
-	private AvaliacaoRetositoy retositoy;
+	private AvaliacaoRepository retository;
 
 	@Transactional(readOnly = false)
 	public void saveOrUpdate(Avaliacao avaliacao) {
-
 		avaliacao.setMediaAvaliacao(
 				MediaAvaliacao.media(avaliacao.getTotalDasAvaliacoes(), avaliacao.getTotalDosAvaliadores()));
-
+		
 		if (avaliacao.getId() != null) {
-			Optional<Avaliacao> optional = retositoy.findById(avaliacao.getId());
+			Optional<Avaliacao> optional = retository.findById(avaliacao.getId());
 
 			Avaliacao aPersistente = optional.get();
 
@@ -46,41 +45,36 @@ public class AvaliacaoService {
 			aPersistente.setAvaliacaoUsuario(avaliacao.getAvaliacaoUsuario());
 			aPersistente.setMediaAvaliacao(avaliacao.getMediaAvaliacao());
 
-			retositoy.save(aPersistente);
+			retository.save(aPersistente);
 		} else {
-			retositoy.save(avaliacao);
+			retository.save(avaliacao);
 		}
 	}
 
 	@Transactional(readOnly = false)
 	public void delete(Long id) {
-
-		Optional<Avaliacao> optional = retositoy.findById(id);
+		Optional<Avaliacao> optional = retository.findById(id);
 
 		Avaliacao aPersistente = optional.get();
 
-		retositoy.delete(aPersistente);
+		retository.delete(aPersistente);
 	}
 
 	public Avaliacao findById(Long id) {
-
-		return retositoy.getOne(id);
+		return retository.getOne(id);
 	}
 
 	public Avaliacao findByPontoTuristico(PontoTuristico pontoTuristico) {
-
-		return retositoy.findByPontoTuristicoId(pontoTuristico);
+		return retository.findByPontoTuristicoId(pontoTuristico);
 	}
 
 	public List<Avaliacao> findAll() {
-
-		return retositoy.findAll(Sort.by("pontoTuristicoNome"));
+		return retository.findAll(Sort.by("pontoTuristicoNome"));
 	}
 
 	public Page<Avaliacao> findByPagination(int page, int size) {
-
 		Pageable pageable = PageRequest.of(page, size);
 
-		return retositoy.findAll(pageable);
+		return retository.findAll(pageable);
 	}
 }

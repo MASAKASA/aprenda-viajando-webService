@@ -1,9 +1,14 @@
 package br.com.aprendaViajando.domain.model.pontoTuristico;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
-import java.time.LocalDate;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,7 +27,7 @@ public class Comentario extends AbstractPersistable<Long> {
 	@NotBlank
 	@DateTimeFormat(iso = ISO.DATE_TIME, pattern = "yyyy-MM-dd'T'HH:mm:ss") 
 	@Column(name = "data_comentario", nullable = false)
-	private LocalDate dataComentario;
+	private LocalDateTime dataComentario;
 	
 	@NotBlank
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -47,11 +52,11 @@ public class Comentario extends AbstractPersistable<Long> {
 		this.comentario = comentario;
 	}
 
-	public LocalDate getDataComentario() {
+	public LocalDateTime getDataComentario() {
 		return dataComentario;
 	}
 
-	public void setDataComentario(LocalDate dataComentario) {
+	public void setDataComentario(LocalDateTime dataComentario) {
 		this.dataComentario = dataComentario;
 	}
 

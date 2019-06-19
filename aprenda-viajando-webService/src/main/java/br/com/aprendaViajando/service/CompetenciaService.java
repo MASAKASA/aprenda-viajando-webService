@@ -32,30 +32,26 @@ public class CompetenciaService {
 	
 	@Transactional(readOnly = false)
 	public void saveOrUpdate(Competencia competencia) {
-		
-		String permalink = ReplaceString.formatarPermalink(competencia.getNome());
+		competencia.setPermalink(ReplaceString.formatarPermalink(competencia.getNome()));
 		
 		if (competencia.getId() != null) {
-			//Recupera a Competencia na forma persistente para atualização
 			Optional<Competencia> optional = repository.findById(competencia.getId());
 			
 			Competencia cPersistente = optional.get();
 			
+			cPersistente.setListaAssuntos(competencia.getListaAssuntos());
+			cPersistente.setListaPontoTuristico(competencia.getListaPontoTuristico());
 			cPersistente.setNome(competencia.getNome());
-			cPersistente.setPermalink(permalink);
+			cPersistente.setPermalink(competencia.getPermalink());
 			
 			repository.save(cPersistente);
-		} else {
-			//Cadastra um novo assunto
-			competencia.setPermalink(permalink);			
+		} else {			
 			repository.save(competencia);
 		}
 	}
 	
 	@Transactional(readOnly = false)
 	public void delete(Long id) {
-		
-		//Recupera a Competencia na forma persistente para ser excluido
 		Optional<Competencia> optional = repository.findById(id);
 		
 		Competencia cPersistente = optional.get();
@@ -64,29 +60,24 @@ public class CompetenciaService {
 	}
 	
 	public Competencia findById(Long id) {
-		
 		Optional<Competencia> optional = repository.findById(id);
 		
 		return optional.get();
 	}
 	
 	public Competencia findByPermalink (String permalink) {
-		
 		return repository.findByPermalink(permalink);
 	}
 	
 	public List<Competencia> findAll() {
-		
 		return repository.findAll(Sort.by("nome").ascending());
 	}
 	
 	public List<Competencia> findByNome(String nome) {
-		
 		return repository.findByNomeContainingOrderByNomeAsc(nome);
 	}
 	
 	public Page<Competencia> findByPagination(int page, int size) {
-		
 		Pageable pageable = PageRequest.of(page, size);
 		
 		return repository.findAllByOrderByNomeAsc(pageable);

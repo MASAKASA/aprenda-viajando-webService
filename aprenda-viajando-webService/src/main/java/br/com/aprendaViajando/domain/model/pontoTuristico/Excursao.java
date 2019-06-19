@@ -1,10 +1,17 @@
 package br.com.aprendaViajando.domain.model.pontoTuristico;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,7 +34,7 @@ public class Excursao extends AbstractPersistable<Long> {
 	
 	@DateTimeFormat(iso = ISO.DATE_TIME, pattern = "yyyy-MM-dd'T'HH:mm:ss") 
 	@Column(name = "data_excursao", nullable = false)
-	private LocalDate dataExcursao;
+	private LocalDateTime dataExcursao;
 	
 	@NotBlank
 	@Enumerated(EnumType.STRING)
@@ -79,11 +86,11 @@ public class Excursao extends AbstractPersistable<Long> {
 		this.permalink = permalink;
 	}
 
-	public LocalDate getDataExcursao() {
+	public LocalDateTime getDataExcursao() {
 		return dataExcursao;
 	}
 
-	public void setDataExcursao(LocalDate dataExcursao) {
+	public void setDataExcursao(LocalDateTime dataExcursao) {
 		this.dataExcursao = dataExcursao;
 	}
 
