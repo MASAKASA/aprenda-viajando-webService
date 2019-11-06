@@ -23,5 +23,4 @@ public class AprendaViajandoWebServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AprendaViajandoWebServiceApplication.class, args);
 	}
-
 }
