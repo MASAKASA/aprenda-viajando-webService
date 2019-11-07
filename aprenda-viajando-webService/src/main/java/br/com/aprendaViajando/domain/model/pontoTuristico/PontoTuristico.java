@@ -1,11 +1,15 @@
 package br.com.aprendaViajando.domain.model.pontoTuristico;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -17,8 +21,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
 import br.com.aprendaViajando.domain.model.competencias.Competencia;
 import br.com.aprendaViajando.domain.model.util.Avatar;
 import br.com.aprendaViajando.domain.model.util.Endereco;
@@ -26,7 +28,14 @@ import br.com.aprendaViajando.domain.model.util.Telefone;
 
 @Entity
 @Table(name = "pontos_turisticos")
-public class PontoTuristico extends AbstractPersistable<Long> {
+public class PontoTuristico implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy =  GenerationType.IDENTITY)
+	@Column(name = "id_ponto_turistico")
+	private Long id;
 	
 	@NotBlank
 	@Column(nullable = false, unique = true)
@@ -90,10 +99,52 @@ public class PontoTuristico extends AbstractPersistable<Long> {
 		inverseJoinColumns = @JoinColumn(name = "excursao_id")
 	)
 	private List<Excursao>	listaExcursoes;
-	
+
+	public PontoTuristico() {
+		super();
+	}
+
 	@Override
-	protected void setId(Long id) {
-		super.setId(id);
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PontoTuristico other = (PontoTuristico) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "PontoTuristico [id=" + id + ", nome=" + nome + ", permalink=" + permalink + ", email=" + email
+				+ ", horarioFuncionamento=" + horarioFuncionamento + ", historia=" + historia + ", faixaEtariaMinima="
+				+ faixaEtariaMinima + ", ingresso=" + ingresso + ", endereco=" + endereco + ", avatarPrincipal="
+				+ avatarPrincipal + ", listaAvatar=" + listaAvatar + ", listaTelefone=" + listaTelefone
+				+ ", listaComentarios=" + listaComentarios + ", listaCompetencias=" + listaCompetencias
+				+ ", listaExcursoes=" + listaExcursoes + "]";
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getNome() {

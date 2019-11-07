@@ -1,15 +1,29 @@
 package br.com.aprendaViajando.domain.model.util;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import br.com.aprendaViajando.domain.model.util.enuns.EstadoEnum;
 
 @Entity
 @Table(name = "enderecos")
-public class Endereco  extends AbstractPersistable<Long> {
+public class Endereco implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy =  GenerationType.IDENTITY)
+	@Column(name = "id_endereco")
+	private Long id;
 
 	@NotBlank
 	private String logradouro;
@@ -44,9 +58,48 @@ public class Endereco  extends AbstractPersistable<Long> {
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
+	public Endereco() {
+		super();
+	}
+
 	@Override
-	protected void setId(Long id) {
-		super.setId(id);
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Endereco other = (Endereco) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Endereco [id=" + id + ", logradouro=" + logradouro + ", numero=" + numero + ", bairro=" + bairro
+				+ ", cidade=" + cidade + ", cep=" + cep + ", complemento=" + complemento + ", pontoReferencia="
+				+ pontoReferencia + ", latitude=" + latitude + ", longitude=" + longitude + ", estado=" + estado + "]";
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getLogradouro() {

@@ -60,7 +60,11 @@ public class UsuarioService {
 	}
 	
 	public Usuario findById(Long id) {
-		return repository.getOne(id);
+		Optional<Usuario> optional = repository.findById(id);
+		
+		Usuario uPersistente = optional.get();
+		
+		return uPersistente;
 	}
 	
 	public List<Usuario> findByUsuario(String nome) {

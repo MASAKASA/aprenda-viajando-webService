@@ -1,5 +1,6 @@
 package br.com.aprendaViajando.domain.model.pontoTuristico;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -7,13 +8,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -22,7 +25,14 @@ import br.com.aprendaViajando.domain.model.usuario.Usuario;
 
 @Entity
 @Table(name = "excursoes")
-public class Excursao extends AbstractPersistable<Long> {
+public class Excursao implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy =  GenerationType.IDENTITY)
+	@Column(name = "id_excursao")
+	private Long id;
 
 	@NotBlank
 	@Column(nullable = false)
@@ -65,9 +75,48 @@ public class Excursao extends AbstractPersistable<Long> {
 	)
 	private List<PontoTuristico> listPontoTuristico;
 
+	public Excursao() {
+		super();
+	}
+
 	@Override
-	protected void setId(Long id) {
-		super.setId(id);
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Excursao other = (Excursao) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Excursao [id=" + id + ", nome=" + nome + ", permalink=" + permalink + ", dataExcursao=" + dataExcursao
+				+ ", statusExcursao=" + statusExcursao + ", listaCoordenadores=" + listaCoordenadores
+				+ ", listaParticipantes=" + listaParticipantes + ", listPontoTuristico=" + listPontoTuristico + "]";
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getNome() {
