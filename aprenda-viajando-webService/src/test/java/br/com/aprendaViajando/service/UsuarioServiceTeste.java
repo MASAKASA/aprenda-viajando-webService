@@ -38,7 +38,7 @@ public class UsuarioServiceTeste {
 	@Test
 	@Transactional(readOnly = false)
 	public void saveOrUpdateOfSaveTeste() {
-		String id = "1";
+		//Testa se o usuario foi cadastrado do banco de dados
 		String nome = "marcio";
 		String email ="marcioandredasilvaalmeida@gmail.com";
 		
@@ -47,44 +47,63 @@ public class UsuarioServiceTeste {
 		usuario.setNome(nome);
 		usuario.setEmail(email);
 		
+		System.out.println();
+		System.out.println(usuario.getId());
+		System.out.println();
+		
 		service.saveOrUpdate(usuario);
 		
-		Optional<Usuario> optional = repository.findById(Long.parseLong(id));
+		System.out.println("Cadastro");
+		System.out.println(usuario.getId());
+		System.out.println();
 		
-		assertTrue(optional.isPresent());
+		Optional<Usuario> optional = repository.findById(usuario.getId());
+		
+//		//Testa a duplicidade do nome e email no cadastro
+//		Usuario usuario2 = new Usuario();
+//		usuario2.setEmail(email);
+//		usuario2.setNome(nome);
+//		
+//		service.saveOrUpdate(usuario2);
+//		
+//		assertFalse(usuario.getEmail().equals(usuario2.getEmail()));
+//		assertFalse(usuario.getNome().equals(usuario2.getNome()));
+		assertTrue(optional.isPresent());//Se true o usuario foi cadastrado com sucesso
 	}
 	
 	@Test
 	public void saveOrUpdateOfUpdateTeste() {
-		Usuario usuario = service.findById(1L);
-		
-		usuario.setNome("m");
-		
-		service.saveOrUpdate(usuario);
-		
-		Usuario usuario2 = service.findById(1L);
-		
-		//assertTrue("1".equals(String.valueOf(usuario.getId())));
-		//assertTrue("marcioandredasilvaalmeida@gmail.com".equals(usuario.getEmail()));
-		assertTrue("m".equals(usuario2.getNome()));
-	}
+//		Usuario usuario = service.findById(1L);
+//		
+//		usuario.setNome("m");
+//		
+//		service.saveOrUpdate(usuario);
+//		
+//		Usuario usuario2 = service.findById(1L);
+//		
+//		//assertTrue("1".equals(String.valueOf(usuario.getId())));
+//		//assertTrue("marcioandredasilvaalmeida@gmail.com".equals(usuario.getEmail()));
+//		assertTrue("m".equals(usuario2.getNome()));
+	}	
 	
 	@Test
-	public void deleteTeste() {
-		service.delete(1L);
-		
-		Optional<Usuario> optional = repository.findById(1L);
-		
-		assertFalse(optional.isPresent());
-	}
-	
-	@Test
+	@Transactional(readOnly = true)
 	public void findByIdCadastroInicialTeste() {
-		Usuario usuario = service.findById(1L);
+		Usuario usuario = service.findById(18L);
 		
-		assertTrue("1".equals(String.valueOf(usuario.getId())));
+		assertTrue("18".equals(String.valueOf(usuario.getId())));
 		assertTrue("marcioandredasilvaalmeida@gmail.com".equals(usuario.getEmail()));
 		assertTrue("marcio".equals(usuario.getNome()));
+	}
+	
+	@Test
+	//@Transactional(readOnly = false)
+	public void deleteTeste() {
+		service.delete(18L);
+		
+		Optional<Usuario> optional = repository.findById(18L);
+		
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

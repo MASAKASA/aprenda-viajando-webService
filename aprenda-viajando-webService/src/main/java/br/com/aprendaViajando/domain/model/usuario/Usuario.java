@@ -40,6 +40,7 @@ public class Usuario implements Serializable {
 	private String nome;
 	
 	@Email
+	@Column(nullable = false, unique = true)
 	private String email;
 	
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
