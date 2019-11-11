@@ -6,17 +6,21 @@ package br.com.aprendaViajando.service;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import br.com.aprendaViajando.domain.model.usuario.Usuario;
+import br.com.aprendaViajando.domain.model.util.Endereco;
+import br.com.aprendaViajando.domain.model.util.enuns.EstadoEnum;
 import br.com.aprendaViajando.domain.repository.usuario.UsuarioRepository;
 
 /**
@@ -33,29 +37,24 @@ public class UsuarioServiceTeste {
 	private UsuarioService service;
 	
 	@Autowired
+	private EnderecoService serviceEndereco;
+	
+	@Autowired
 	private UsuarioRepository repository;
 	
 	@Test
-	@Transactional(readOnly = false)
+	@Commit
 	public void saveOrUpdateOfSaveTeste() {
 		//Testa se o usuario foi cadastrado do banco de dados
-		String nome = "marcio";
-		String email ="marcioandredasilvaalmeida@gmail.com";
+		String nome = "a";
+		String email ="a@gmail.com";
 		
 		Usuario usuario = new Usuario();
 		
 		usuario.setNome(nome);
 		usuario.setEmail(email);
 		
-		System.out.println();
-		System.out.println(usuario.getId());
-		System.out.println();
-		
 		service.saveOrUpdate(usuario);
-		
-		System.out.println("Cadastro");
-		System.out.println(usuario.getId());
-		System.out.println();
 		
 		Optional<Usuario> optional = repository.findById(usuario.getId());
 		
@@ -72,53 +71,177 @@ public class UsuarioServiceTeste {
 	}
 	
 	@Test
+	@Commit
 	public void saveOrUpdateOfUpdateTeste() {
-//		Usuario usuario = service.findById(1L);
-//		
-//		usuario.setNome("m");
-//		
-//		service.saveOrUpdate(usuario);
-//		
-//		Usuario usuario2 = service.findById(1L);
-//		
-//		//assertTrue("1".equals(String.valueOf(usuario.getId())));
-//		//assertTrue("marcioandredasilvaalmeida@gmail.com".equals(usuario.getEmail()));
-//		assertTrue("m".equals(usuario2.getNome()));
-	}	
-	
-	@Test
-	@Transactional(readOnly = true)
-	public void findByIdCadastroInicialTeste() {
-		Usuario usuario = service.findById(18L);
+		//Dados para o teste
+		String nome = "z";
+		String email ="z@gmail.com";
 		
-		assertTrue("18".equals(String.valueOf(usuario.getId())));
-		assertTrue("marcioandredasilvaalmeida@gmail.com".equals(usuario.getEmail()));
-		assertTrue("marcio".equals(usuario.getNome()));
+		//Cadastrar um usuario para depois atualizar
+		Usuario usuario = new Usuario();
+		
+		usuario.setNome(nome);
+		usuario.setEmail(email);
+		
+		service.saveOrUpdate(usuario);
+		
+		//Cadastrar um endereco para atualizar o usuario
+		Endereco endereco = new Endereco();
+		
+		endereco.setLogradouro("rua Carneiro de Campos");
+		endereco.setBairro("Petropolis");
+		endereco.setCep("55032-370");
+		endereco.setCidade("Caruaru");
+		endereco.setComplemento("Casa");
+		endereco.setEstado(EstadoEnum.PE);
+		endereco.setNumero("408");
+		endereco.setPontoReferencia("Perto do Village");
+		
+		serviceEndereco.saveOrUpdate(endereco);
+		
+		//TODO Cadastrar um avatar para atualizar o usuario
+		
+		
+		//Atualizar o usuario
+		usuario.setEndereco(endereco);
+		
+		service.saveOrUpdate(usuario);
+		
+		//Teste para confirmar a atualização
+		Usuario uPersistente = service.findById(usuario.getId());
+		
+		assertTrue(uPersistente.getId() == usuario.getId());
+		assertTrue(uPersistente.getEndereco().getId() == endereco.getId());
 	}
 	
 	@Test
-	//@Transactional(readOnly = false)
+	@Commit
 	public void deleteTeste() {
-		service.delete(18L);
+		//Dados para o teste
+		String nome = "r";
+		String email ="r@gmail.com";
 		
-		Optional<Usuario> optional = repository.findById(18L);
+		//Cadastrar um usuario para depois deletar
+		Usuario usuario = new Usuario();
+		
+		usuario.setNome(nome);
+		usuario.setEmail(email);
+		
+		service.saveOrUpdate(usuario);
+		
+		//Deletando o usuario
+		service.delete(usuario.getId());
+		                     
+		//Testando a exclusão do usuario
+		Optional<Usuario> optional = repository.findById(usuario.getId());
 		
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
+	@Commit
+	public void findByIdCadastroInicialTeste() {
+		//Dados para o teste
+		String nome = "h";
+		String email ="h@gmail.com";
+		
+		//Cadastrar um usuario para depois pesquisar
+		Usuario usuario = new Usuario();
+		
+		usuario.setNome(nome);
+		usuario.setEmail(email);
+		
+		service.saveOrUpdate(usuario);
+		
+		//Testando pesquisa de usuario
+		Usuario uPersistente = service.findById(usuario.getId());
+
+		assertTrue(nome.equals(uPersistente.getNome()));
+		assertTrue(email.equals(uPersistente.getEmail()));
+		assertTrue(uPersistente.getAvatar() == null);
+		assertTrue(uPersistente.getEndereco() == null);
+	}
+	
+	
+	@Test
 	public void findByIdCadastroCompletoTeste() {
+		//Dados para o teste
+		String nome = "h";
+		String email ="h@gmail.com";
 		
-	
+		//Cadastrar um usuario para depois pesquisar
+		Usuario usuario = new Usuario();
+		
+		usuario.setNome(nome);
+		usuario.setEmail(email);
+		
+		service.saveOrUpdate(usuario);
+		
+		//Cadastrar um endereco para atualizar o usuario
+		Endereco endereco = new Endereco();
+		
+		endereco.setLogradouro("rua Carneiro de Campos");
+		endereco.setBairro("Petropolis");
+		endereco.setCep("55032-370");
+		endereco.setCidade("Caruaru");
+		endereco.setComplemento("Casa");
+		endereco.setEstado(EstadoEnum.PE);
+		endereco.setNumero("408");
+		endereco.setPontoReferencia("Perto do Village");
+		
+		serviceEndereco.saveOrUpdate(endereco);
+		
+		//TODO Cadastrar um avatar para atualizar o usuario
+		
+		
+		//Testando pesquisa de usuario
+		Usuario uPersistente = service.findById(usuario.getId());
+
+		assertTrue(uPersistente.getNome().equals(nome));
+		assertTrue(uPersistente.getEmail().equals(email));
+		assertTrue(uPersistente.getEndereco().getId() == endereco.getId());
+		//TODO assertTrue(uPersistente.getAvatar() == null);
 	}
 	
 	@Test
-	public void findByUsuarioTeste() {
+	public void findByNomeTeste() {
+		//Dados para o teste
+		String pesquisarPor = "m";
+		String  totalPesquisa = "2";
+		String nome = "marcio";
+		String email ="marcioandredasilvaalmeida@gmail.com";
+		String nome2 = "m";
+		String email2 ="m@gmail.com";
 		
+		//Cadastrar um usuario para depois pesquisar
+		Usuario usuario = new Usuario();
+		Usuario usuario2 = new Usuario();
+		
+		usuario.setNome(nome);
+		usuario.setEmail(email);
+		usuario2.setNome(nome2);
+		usuario2.setEmail(email2);
+		
+		service.saveOrUpdate(usuario);
+		service.saveOrUpdate(usuario2);
+		
+		//Testando pesquisa de usuario
+		List<Usuario> usuarios = service.findByNome(pesquisarPor);
+		
+		assertTrue(totalPesquisa.equals(String.valueOf(usuarios.size())));
 	}
 	
 	@Test
-	public void findByPaginationUsuarioTeste() {
+	public void findByPaginationTeste() {
+		String pagina = "1";
+		String  totalPesquisa = "5	";
+		
+		Page page = service.findByPaginationUsuario(
+				Integer.parseInt(pagina), Integer.parseInt(totalPesquisa));
+		
+		
+		assertTrue(pagina.equals(String.valueOf(page.getNumber())));
+		assertTrue(totalPesquisa.equals(String.valueOf(page.getSize())));
 		
 	}
 }

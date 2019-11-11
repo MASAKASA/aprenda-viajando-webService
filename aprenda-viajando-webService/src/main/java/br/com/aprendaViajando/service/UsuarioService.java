@@ -67,7 +67,7 @@ public class UsuarioService {
 		return uPersistente;
 	}
 	
-	public List<Usuario> findByUsuario(String nome) {
+	public List<Usuario> findByNome(String nome) {
 		return repository.findByNomeContainingOrderByNomeAsc(nome);
 	}
 	

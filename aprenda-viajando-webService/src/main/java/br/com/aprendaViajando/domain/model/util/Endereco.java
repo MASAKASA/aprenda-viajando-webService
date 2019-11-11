@@ -42,19 +42,15 @@ public class Endereco implements Serializable {
 	
 	private String complemento;
 	
-	@NotBlank
 	@Column(name="ponto_de_referencia")
 	private String pontoReferencia;
 	
-	@NotBlank
 	@Column(name="latitude")
 	private String latitude;
 	
-	@NotBlank
 	@Column(name="longitude")
 	private String longitude;
 	
-	@NotBlank
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
