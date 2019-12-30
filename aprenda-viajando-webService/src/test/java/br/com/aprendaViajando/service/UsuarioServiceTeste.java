@@ -19,6 +19,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import br.com.aprendaViajando.domain.model.usuario.Usuario;
+import br.com.aprendaViajando.domain.model.usuario.exceptions.EmailJaCadastradoException;
+import br.com.aprendaViajando.domain.model.usuario.exceptions.NomeJaCadastradoException;
 import br.com.aprendaViajando.domain.model.util.Endereco;
 import br.com.aprendaViajando.domain.model.util.enuns.EstadoEnum;
 import br.com.aprendaViajando.domain.repository.usuario.UsuarioRepository;
@@ -44,7 +46,8 @@ public class UsuarioServiceTeste {
 
 	@Test
 	@Commit
-	public void saveOrUpdateOfSaveTeste() {
+	public void saveOrUpdateOfSaveTeste() throws NomeJaCadastradoException, EmailJaCadastradoException {
+
 		// Testa se o usuario foi cadastrado do banco de dados
 		String nome = "a";
 		String email = "a@gmail.com";
@@ -58,21 +61,13 @@ public class UsuarioServiceTeste {
 
 		Optional<Usuario> optional = repository.findById(usuario.getId());
 
-//		//Testa a duplicidade do nome e email no cadastro
-//		Usuario usuario2 = new Usuario();
-//		usuario2.setEmail(email);
-//		usuario2.setNome(nome);
-//		
-//		service.saveOrUpdate(usuario2);
-//		
-//		assertFalse(usuario.getEmail().equals(usuario2.getEmail()));
-//		assertFalse(usuario.getNome().equals(usuario2.getNome()));
-		assertTrue(optional.isPresent());// Se true o usuario foi cadastrado com sucesso
+		assertTrue(optional.isPresent());
 	}
 
 	@Test
 	@Commit
-	public void saveOrUpdateOfUpdateTeste() {
+	public void saveOrUpdateOfUpdateTeste() throws NomeJaCadastradoException, EmailJaCadastradoException {
+
 		// Dados para o teste
 		String nome = "b";
 		String email = "b@gmail.com";
@@ -115,10 +110,61 @@ public class UsuarioServiceTeste {
 
 	@Test
 	@Commit
-	public void deleteTeste() {
+	public void atualizarNomeTeste() throws NomeJaCadastradoException {
 		// Dados para o teste
-		String nome = "c";
+		String nome = "3";
 		String email = "c@gmail.com";
+		String nomeAtualizado = "c";
+
+		// Cadastrar um usuario para depois atualizar
+		Usuario usuario = new Usuario();
+
+		usuario.setNome(nome);
+		usuario.setEmail(email);
+
+		service.saveOrUpdate(usuario);
+
+		// Atualização do nome do usuario
+		service.atualizarNome(nome, nomeAtualizado);
+
+		// Teste para confirmar a atualização
+		Usuario uPersistente = service.findById(usuario.getId());
+
+		assertTrue(uPersistente.getNome().equals(nomeAtualizado));
+	}
+
+	@Test
+	@Commit
+	public void atualizarEmailTeste() throws EmailJaCadastradoException {
+		// Dados para o teste
+		String nome = "d";
+		String email = "4@gmail.com";
+		String emailAtualizado = "d@gmail.com";
+
+		// Cadastrar um usuario para depois atualizar
+		Usuario usuario = new Usuario();
+
+		usuario.setNome(nome);
+		usuario.setEmail(email);
+
+		service.saveOrUpdate(usuario);
+
+		// Atualização do email do usuario
+		service.atualizarEmail(email, emailAtualizado);
+
+		// Teste para confirmar a atualização
+		Usuario uPersistente = service.findById(usuario.getId());
+
+		assertTrue(uPersistente.getEmail().equals(emailAtualizado));
+	}
+
+	@Test
+	@Commit
+	public void deleteTeste() throws NomeJaCadastradoException, EmailJaCadastradoException {
+
+		// Dados para o teste
+		String nome = "e";
+		String email = "e@gmail.com";
 
 		// Cadastrar um usuario para depois deletar
 		Usuario usuario = new Usuario();
@@ -139,10 +185,11 @@ public class UsuarioServiceTeste {
 
 	@Test
 	@Commit
-	public void findByIdCadastroInicialTeste() {
+	public void findByIdCadastroInicialTeste() throws NomeJaCadastradoException, EmailJaCadastradoException {
+
 		// Dados para o teste
-		String nome = "d";
-		String email = "d@gmail.com";
+		String nome = "f";
+		String email = "f@gmail.com";
 
 		// Cadastrar um usuario para depois pesquisar
 		Usuario usuario = new Usuario();
@@ -163,11 +210,12 @@ public class UsuarioServiceTeste {
 
 	@Test
 	@Commit
-	public void findByIdCadastroCompletoTeste() {
+	public void findByIdCadastroCompletoTeste() throws NomeJaCadastradoException, EmailJaCadastradoException {
+
 		// Dados para o teste
-		String nome = "e";
-		String email = "e@gmail.com";
-		
+		String nome = "g";
+		String email = "g@gmail.com";
+
 		// TODO Cadastrar um avatar para atualizar o usuario
 
 		// Cadastrar um endereco para atualizar o usuario
@@ -202,7 +250,8 @@ public class UsuarioServiceTeste {
 
 	@Test
 	@Commit
-	public void findByNomeTeste() {
+	public void findByNomeTeste() throws NomeJaCadastradoException, EmailJaCadastradoException {
+
 		// Dados para o teste
 		String pesquisarPor = "m";
 		String totalPesquisa = "2";
@@ -235,11 +284,88 @@ public class UsuarioServiceTeste {
 		String pagina = "1";
 		String totalPesquisa = "6";
 
-		Page page = service.findByPaginationUsuario(
-				Integer.parseInt(pagina), Integer.parseInt(totalPesquisa));
+		Page page = service.findByPaginationUsuario(Integer.parseInt(pagina), Integer.parseInt(totalPesquisa));
 
 		assertTrue(pagina.equals(String.valueOf(page.getNumber())));
 		assertTrue(totalPesquisa.equals(String.valueOf(page.getSize())));
 
+	}
+
+	@Test
+	@Commit
+	public void cadastrarNomeBrancoOuNullTeste() 
+			throws NomeJaCadastradoException, EmailJaCadastradoException {
+		// Testa se o nome não esta em branco ou null
+		String nome = " ";
+		String email = "g@gmail.com";
+		String nome2 = " ";
+		String email2 = "h@gmail.com";
+		
+		Usuario usuario = new Usuario();
+		Usuario usuario2 = new Usuario();
+		
+		usuario.setNome(nome);
+		usuario.setEmail(email);
+		usuario2.setNome(nome2);
+		usuario2.setEmail(email2);
+		
+		service.saveOrUpdate(usuario);
+		//service.saveOrUpdate(usuario2);
+	}
+	
+	@Test
+	@Commit
+	public void cadastrarEmailInvalido() 
+			throws NomeJaCadastradoException, EmailJaCadastradoException {
+		// Testa se o email é válido
+		String nome = "h";
+		String email = " ";
+		
+		Usuario usuario = new Usuario();
+
+		usuario.setNome(nome);
+		usuario.setEmail(email);
+
+		service.saveOrUpdate(usuario);
+	}
+
+	@Test(expected = NomeJaCadastradoException.class)
+	public void NomeJaCadastradoExceptionTeste() throws EmailJaCadastradoException {
+		// Testa se o já tem nome cadastrado do banco de dados
+		String nome = "a";
+		String email = "a@gmail.com";
+		String mensagemErro = "Nome já cadastrado no sistema!";
+
+		Usuario usuario = new Usuario();
+
+		usuario.setNome(nome);
+		usuario.setEmail(email);
+
+		try {
+			service.saveOrUpdate(usuario);
+		} catch (NomeJaCadastradoException e) {
+			e.printStackTrace();
+			assertTrue(mensagemErro.equalsIgnoreCase(e.getMessage()));
+		}
+	}
+
+	@Test(expected = EmailJaCadastradoException.class)
+	public void EmailJaCadastradoExceptionTeste() throws NomeJaCadastradoException {
+		// Testa se o e-mail já foi cadastrado do banco de dados
+		String nome = "b";
+		String email = "b@gmail.com";
+		String mensagemErro = "Email já cadastrado no sistema!";
+
+		Usuario usuario = new Usuario();
+
+		usuario.setNome(nome);
+		usuario.setEmail(email);
+
+		try {
+			service.saveOrUpdate(usuario);
+		} catch (EmailJaCadastradoException e) {
+			e.printStackTrace();
+			assertTrue(mensagemErro.equalsIgnoreCase(e.getMessage()));
+		}
 	}
 }

@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.aprendaViajando.domain.model.usuario.Usuario;
+import br.com.aprendaViajando.domain.model.usuario.exceptions.EmailJaCadastradoException;
+import br.com.aprendaViajando.domain.model.usuario.exceptions.NomeJaCadastradoException;
 import br.com.aprendaViajando.domain.repository.usuario.UsuarioRepository;
 
 /**
@@ -29,25 +31,75 @@ public class UsuarioService {
 	private UsuarioRepository repository;
 	
 	@Transactional(readOnly = false)
-	public void saveOrUpdate(Usuario usuario) {
+	public void saveOrUpdate(Usuario usuario) 
+			throws NomeJaCadastradoException, EmailJaCadastradoException {
+		
 		if (usuario.getId() != null) {
 			Optional<Usuario> optional = repository.findById(usuario.getId());
 			
 			Usuario uPersistente = optional.get();
 			
 			uPersistente.setAvatar(usuario.getAvatar());
-			uPersistente.setEmail(usuario.getEmail());
 			uPersistente.setEndereco(usuario.getEndereco());
 			uPersistente.setListaComenterio(usuario.getListaComenterio());
 			uPersistente.setListaCoordenacoes(usuario.getListaCoordenacoes());
 			uPersistente.setListaExcursoes(usuario.getListaExcursoes());
 			uPersistente.setListaTelefone(usuario.getListaTelefone());
-			uPersistente.setNome(usuario.getNome());
 			
 			repository.save(uPersistente);
 		} else {
+			Optional<Usuario> optionalUsuarioNome = repository.findByNome(usuario.getNome());
+			
+			if (optionalUsuarioNome.isPresent()) {
+				throw new NomeJaCadastradoException("Nome já cadastrado no sistema!");
+			}
+			
+			Optional<Usuario> optionalUsuarioEmail = repository.findByEmail(usuario.getEmail());
+			
+			if (optionalUsuarioEmail.isPresent()) {
+				throw new EmailJaCadastradoException("Email já cadastrado no sistema!");
+			}
+			
 			repository.save(usuario);
 		}
+	}
+	
+	@Transactional(readOnly = false)
+	public void atualizarNome(String nomeAntigo, String nomeAtualizado) 
+			throws NomeJaCadastradoException {
+		
+		Optional<Usuario> optionalUsuarioNome = repository.findByNome(nomeAtualizado);
+		
+		if (optionalUsuarioNome.isPresent()) {
+			throw new NomeJaCadastradoException("Nome já cadastrado no sistema!");
+		}
+		
+		Optional<Usuario> optional = repository.findByNome(nomeAntigo);
+		
+		Usuario uPersistente = optional.get();
+		
+		uPersistente.setNome(nomeAtualizado);
+		
+		repository.save(uPersistente);
+	}
+	
+	@Transactional(readOnly = false)
+	public void atualizarEmail(String emailAntigo, String emailAtualizado) 
+			throws EmailJaCadastradoException {
+		
+		Optional<Usuario> optionalUsuarioEmail = repository.findByEmail(emailAtualizado);
+		
+		if (optionalUsuarioEmail.isPresent()) {
+			throw new EmailJaCadastradoException("Email já cadastrado no sistema!");
+		}
+		
+		Optional<Usuario> optional = repository.findByEmail(emailAntigo);
+		
+		Usuario uPersistente = optional.get();
+		
+		uPersistente.setEmail(emailAtualizado);
+		
+		repository.save(uPersistente);
 	}
 	
 	@Transactional(readOnly = false)
