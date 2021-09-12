@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.aprendaViajando.domain.model.pontoTuristico.PontoTuristico;
 import br.com.aprendaViajando.domain.model.usuario.Usuario;
 import br.com.aprendaViajando.domain.model.util.enuns.TipoTelefoneEnum;
@@ -46,6 +48,7 @@ public class Telefone implements Serializable {
 	@JoinColumn(name = "ponto_turistico_id")
 	private PontoTuristico pontoTuristico;
 	
+	@JsonIgnore
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
