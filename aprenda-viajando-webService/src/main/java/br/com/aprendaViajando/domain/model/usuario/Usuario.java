@@ -35,11 +35,12 @@ public class Usuario implements Serializable {
 	@Column(name = "id_usuario")
 	private Long id;
 	
-	@NotBlank
+	@NotBlank//(message = "Nome não pode estar nulo ou branco!")
 	@Column(nullable = false, unique = true)
 	private String nome;
 	
 	@Email
+	@Column(nullable = false, unique = true)
 	private String email;
 	
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

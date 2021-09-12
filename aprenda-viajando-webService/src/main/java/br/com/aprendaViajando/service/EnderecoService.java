@@ -58,7 +58,11 @@ public class EnderecoService {
 	}
 	
 	public Endereco findById(Long id) {
-		return repository.getOne(id);
+		Optional<Endereco> optional =repository.findById(id);
+		
+		Endereco ePersistente = optional.get();
+		
+		return ePersistente;
 	}
 	
 	public List<Endereco> findAll() {

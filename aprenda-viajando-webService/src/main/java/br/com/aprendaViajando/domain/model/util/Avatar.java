@@ -40,7 +40,6 @@ public class Avatar implements Serializable {
 	@Column(nullable = false)
 	private byte[] avatar;
 	
-	@NotBlank
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
