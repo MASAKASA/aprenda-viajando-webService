@@ -20,6 +20,8 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.aprendaViajando.domain.model.pontoTuristico.enuns.StatusExcursao;
 import br.com.aprendaViajando.domain.model.usuario.Usuario;
 
@@ -51,6 +53,7 @@ public class Excursao implements Serializable {
 	@Column(nullable = false)
 	private StatusExcursao statusExcursao;
 
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 		name = "excursoes_coordenadores",	
@@ -59,6 +62,7 @@ public class Excursao implements Serializable {
 	)
 	private List<Usuario> listaCoordenadores;
 	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 		name = "excursoes_participantes",	
@@ -67,6 +71,7 @@ public class Excursao implements Serializable {
 	)
 	private List<Usuario> listaParticipantes;
 	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 		name = "pontos_turisticos_excursoes",	

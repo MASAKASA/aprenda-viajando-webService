@@ -17,6 +17,8 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.aprendaViajando.domain.model.usuario.Usuario;
 
 @Entity
@@ -39,11 +41,13 @@ public class Comentario implements Serializable {
 	@Column(name = "data_comentario", nullable = false)
 	private LocalDateTime dataComentario;
 	
+	@JsonIgnore
 	@NotBlank
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "usuario_id", nullable = false) 
 	private Usuario usuario;
 	
+	@JsonIgnore
 	@NotBlank
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "ponto_turistico_id", nullable = false) 

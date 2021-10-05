@@ -39,11 +39,12 @@ public class Telefone implements Serializable {
 	@NotBlank
 	private String numero;
 	
-	@NotBlank
+	//@NotBlank
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private TipoTelefoneEnum tipoTelefone;
 	
+	@JsonIgnore
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "ponto_turistico_id")
 	private PontoTuristico pontoTuristico;
@@ -85,7 +86,8 @@ public class Telefone implements Serializable {
 	@Override
 	public String toString() {
 		return "Telefone [id=" + id + ", ddd=" + ddd + ", numero=" + numero + ", tipoTelefone=" + tipoTelefone
-				+ ", pontoTuristico=" + pontoTuristico + ", usuario=" + usuario + "]";
+				+ "]";
+				//", pontoTuristico=" + pontoTuristico + ", usuario=" + usuario + "]";
 	}
 
 	public Long getId() {

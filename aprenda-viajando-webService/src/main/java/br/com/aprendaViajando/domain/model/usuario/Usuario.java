@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.aprendaViajando.domain.model.pontoTuristico.Comentario;
 import br.com.aprendaViajando.domain.model.pontoTuristico.Excursao;
 import br.com.aprendaViajando.domain.model.util.Avatar;
@@ -51,12 +53,13 @@ public class Usuario implements Serializable {
 	@JoinColumn(name = "avatar_id")
 	private Avatar avatar;
 	
-	@OneToMany(mappedBy = "usuario", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@OneToMany(mappedBy = "usuario", cascade = {CascadeType.ALL, CascadeType.MERGE})
 	private List<Telefone> listaTelefone;
 	
 	@OneToMany(mappedBy = "usuario", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private List<Comentario> listaComenterio;
 	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 		name = "excursoes_coordenadores",	
@@ -65,6 +68,7 @@ public class Usuario implements Serializable {
 	)
 	private List<Excursao> listaCoordenacoes;
 	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 		name = "excursoes_participantes",	
@@ -105,8 +109,9 @@ public class Usuario implements Serializable {
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", nome=" + nome + ", email=" + email + ", endereco=" + endereco + ", avatar="
-				+ avatar + ", listaTelefone=" + listaTelefone + ", listaComenterio=" + listaComenterio
-				+ ", listaCoordenacoes=" + listaCoordenacoes + ", listaExcursoes=" + listaExcursoes + "]";
+				+ avatar + "]";
+//				", listaTelefone=" + listaTelefone + ", listaComenterio=" + listaComenterio
+//				+ ", listaCoordenacoes=" + listaCoordenacoes + ", listaExcursoes=" + listaExcursoes + "]";
 	}
 
 	public Long getId() {

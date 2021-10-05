@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.aprendaViajando.domain.model.pontoTuristico.PontoTuristico;
 
 @Entity
@@ -43,6 +45,7 @@ public class Competencia implements Serializable {
 	@OneToMany(mappedBy = "competencia", cascade = CascadeType.ALL)
 	private List<Assunto> listaAssuntos;
 	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 		name = "pontos_turisticos_competencias",	

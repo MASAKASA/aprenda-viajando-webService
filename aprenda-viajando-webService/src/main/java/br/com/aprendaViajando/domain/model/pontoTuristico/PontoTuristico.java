@@ -21,6 +21,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.aprendaViajando.domain.model.competencias.Competencia;
 import br.com.aprendaViajando.domain.model.util.Avatar;
 import br.com.aprendaViajando.domain.model.util.Endereco;
@@ -84,6 +86,7 @@ public class PontoTuristico implements Serializable {
 	@OneToMany(mappedBy = "pontoTuristico", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private List<Comentario> listaComentarios;
 	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 		name = "pontos_turisticos_competencias",	
@@ -92,6 +95,7 @@ public class PontoTuristico implements Serializable {
 	)
 	private List<Competencia> listaCompetencias;
 	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 		name = "pontos_turisticos_excursoes",	

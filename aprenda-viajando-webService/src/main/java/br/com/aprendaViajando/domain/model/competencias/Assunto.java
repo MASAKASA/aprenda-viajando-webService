@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "assuntos")
 public class Assunto implements Serializable {
@@ -38,6 +40,7 @@ public class Assunto implements Serializable {
 	@Column(nullable = false, columnDefinition = "TEXT") 
 	private String didatica;
 	
+	@JsonIgnore
 	@NotBlank
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "competencia_id", nullable = false)

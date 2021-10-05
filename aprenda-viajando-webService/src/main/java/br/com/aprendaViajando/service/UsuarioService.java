@@ -14,10 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.aprendaViajando.domain.model.pontoTuristico.Comentario;
 import br.com.aprendaViajando.domain.model.usuario.Usuario;
 import br.com.aprendaViajando.domain.model.usuario.exceptions.EmailJaCadastradoException;
 import br.com.aprendaViajando.domain.model.usuario.exceptions.NomeJaCadastradoException;
+import br.com.aprendaViajando.domain.model.util.Telefone;
 import br.com.aprendaViajando.domain.repository.usuario.UsuarioRepository;
+import br.com.aprendaViajando.service.servicesInterfaces.usuario.UsuarioServiceInterface;
 
 /**
  * @author MARCIO
@@ -25,28 +28,21 @@ import br.com.aprendaViajando.domain.repository.usuario.UsuarioRepository;
  */
 @Service
 @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
-public class UsuarioService {
+public class UsuarioService implements UsuarioServiceInterface<Usuario, String, Long> {
 
 	@Autowired
 	private UsuarioRepository repository;
 	
 	@Transactional(readOnly = false)
-	public void saveOrUpdate(Usuario usuario) 
+	public Usuario saveOrUpdate(Usuario usuario) 
 			throws NomeJaCadastradoException, EmailJaCadastradoException {
 		
 		if (usuario.getId() != null) {
-			Optional<Usuario> optional = repository.findById(usuario.getId());
+			for (Telefone telefone : usuario.getListaTelefone()) {
+				telefone.setUsuario(usuario);
+			}
 			
-			Usuario uPersistente = optional.get();
-			
-			uPersistente.setAvatar(usuario.getAvatar());
-			uPersistente.setEndereco(usuario.getEndereco());
-			uPersistente.setListaComenterio(usuario.getListaComenterio());
-			uPersistente.setListaCoordenacoes(usuario.getListaCoordenacoes());
-			uPersistente.setListaExcursoes(usuario.getListaExcursoes());
-			uPersistente.setListaTelefone(usuario.getListaTelefone());
-			
-			repository.save(uPersistente);
+			return repository.save(usuario);
 		} else {
 			Optional<Usuario> optionalUsuarioNome = repository.findByNome(usuario.getNome());
 			
@@ -60,12 +56,16 @@ public class UsuarioService {
 				throw new EmailJaCadastradoException("Email já cadastrado no sistema!");
 			}
 			
-			repository.save(usuario);
+			for (Telefone telefone : usuario.getListaTelefone()) {
+				telefone.setUsuario(usuario);
+			}
+			
+			return repository.save(usuario);
 		}
 	}
 	
 	@Transactional(readOnly = false)
-	public void atualizarNome(String nomeAntigo, String nomeAtualizado) 
+	public Usuario atualizarNome(String nomeAntigo, String nomeAtualizado) 
 			throws NomeJaCadastradoException {
 		
 		Optional<Usuario> optionalUsuarioNome = repository.findByNome(nomeAtualizado);
@@ -80,7 +80,7 @@ public class UsuarioService {
 		
 		uPersistente.setNome(nomeAtualizado);
 		
-		repository.save(uPersistente);
+		return repository.save(uPersistente);
 	}
 	
 	@Transactional(readOnly = false)
@@ -123,8 +123,7 @@ public class UsuarioService {
 		return repository.findByNomeContainingOrderByNomeAsc(nome);
 	}
 	
-	public Page<Usuario> findByPaginationUsuario(int page, int size) {
-		Pageable pageable = PageRequest.of(page, size);
+	public Page<Usuario> findByPagination(Pageable pageable) {
 		
 		return repository.findAll(pageable);
 	}
